@@ -1,0 +1,33 @@
+#!/bin/sh
+PREREQ=""
+prereqs()
+{
+   echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+   prereqs
+   exit 0
+   ;;
+esac
+
+echo "initramfs keys loading start..." > /dev/kmsg 2>&1 < /dev/console
+
+# import KMK and EVM key
+keyctl add trusted kmk "load `cat /etc/keys/kmk.blob` keyhandle=0x81000001 keyauth=0123456789abcdef0123456789abcdef01234567" @u
+keyctl add encrypted evm-key "load `cat /etc/keys/evm-key.blob`" @u
+
+# change evm-key permission to grant full access to processor and owner
+EVM_KEY=`keyctl show @u | grep evm-key | sed "s/ *//" | sed "s/ .*//"`
+KMK_KEY=`keyctl show @u | grep kmk | sed "s/ *//" | sed "s/ .*//"`
+keyctl setperm $EVM_KEY 0x3f000000
+keyctl setperm $KMK_KEY 0x3f000000
+echo "initramfs, kmk and evm-key loaded successfully: " > /dev/kmsg
+keyctl show > /dev/kmsg
+
+# mount securityfs
+mount -n -t securityfs securityfs /sys/kernel/security
+
+# enable EVM
+echo "1" > /sys/kernel/security/evm

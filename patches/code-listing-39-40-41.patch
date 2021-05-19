@@ -1,0 +1,51 @@
+From 21af18c5b415636f8bf96dfcaba35f42949b1722 Mon Sep 17 00:00:00 2001
+From: "wenxin.leong" <wenxin.leong@infineon.com>
+Date: Thu, 4 Mar 2021 01:16:12 -0800
+Subject: [PATCH] IMA custom config
+
+---
+ drivers/clk/bcm/clk-bcm2835.c       |  2 +-
+ security/integrity/ima/ima_policy.c | 14 ++------------
+ 2 files changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index 06dbcea9547f..9d2c602534cd 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -2382,7 +2382,7 @@ static int __init __bcm2835_clk_driver_init(void)
+ {
+ 	return platform_driver_register(&bcm2835_clk_driver);
+ }
+-postcore_initcall(__bcm2835_clk_driver_init);
++subsys_initcall(__bcm2835_clk_driver_init);
+ 
+ MODULE_AUTHOR("Eric Anholt <eric@anholt.net>");
+ MODULE_DESCRIPTION("BCM2835 clock driver");
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 558a7607bf93..fa5c22aff37e 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -154,18 +154,8 @@ static struct ima_rule_entry default_appraise_rules[] __ro_after_init = {
+ 	{.action = DONT_APPRAISE, .fsmagic = EFIVARFS_MAGIC, .flags = IMA_FSMAGIC},
+ 	{.action = DONT_APPRAISE, .fsmagic = CGROUP_SUPER_MAGIC, .flags = IMA_FSMAGIC},
+ 	{.action = DONT_APPRAISE, .fsmagic = CGROUP2_SUPER_MAGIC, .flags = IMA_FSMAGIC},
+-#ifdef CONFIG_IMA_WRITE_POLICY
+-	{.action = APPRAISE, .func = POLICY_CHECK,
+-	.flags = IMA_FUNC | IMA_DIGSIG_REQUIRED},
+-#endif
+-#ifndef CONFIG_IMA_APPRAISE_SIGNED_INIT
+-	{.action = APPRAISE, .fowner = GLOBAL_ROOT_UID, .fowner_op = &uid_eq,
+-	 .flags = IMA_FOWNER},
+-#else
+-	/* force signature */
+-	{.action = APPRAISE, .fowner = GLOBAL_ROOT_UID, .fowner_op = &uid_eq,
+-	 .flags = IMA_FOWNER | IMA_DIGSIG_REQUIRED},
+-#endif
++	{.action = APPRAISE, .fowner = GLOBAL_ROOT_UID, .fowner_op = &uid_eq,
++	 .uid = GLOBAL_ROOT_UID, .uid_op = &uid_eq, .flags = IMA_FOWNER | IMA_UID},
+ };
+ 
+ static struct ima_rule_entry build_appraise_rules[] __ro_after_init = {
+-- 
+2.17.1
+

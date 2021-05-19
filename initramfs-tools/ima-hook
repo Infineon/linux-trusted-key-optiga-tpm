@@ -1,0 +1,26 @@
+#!/bin/sh
+PREREQ=""
+prereqs()
+{
+   echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+   prereqs
+   exit 0
+   ;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+# Begin real processing below this line
+
+# Copy executables we need to initramfs
+copy_exec /bin/keyctl /usr/bin
+
+# Copy other files to initramfs
+mkdir -p $DESTDIR/etc/keys
+cp /home/pi/keys/kmk.blob $DESTDIR/etc/keys
+cp /home/pi/keys/evm-key.blob $DESTDIR/etc/keys
+
+exit 0
