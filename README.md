@@ -1,6 +1,6 @@
 # Introduction
 
-This document explains how an OPTIGA™ TPM SLx 9670 TPM2.0 can be integrated into a Raspberry Pi® to
+This document explains how an OPTIGA™ TPM SLx 967x TPM2.0 can be integrated into a Raspberry Pi® to
 enable the Linux Trusted and Encrypted Keys.
 
 Trusted Keys require the availability of a TPM to function for added security, while Encrypted Keys do not
@@ -12,8 +12,11 @@ Extended Verification Module (EVM), both will be covered in this document.
 
 Hardware prerequisites:
 - [Raspberry Pi® 4](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/)
-- [IRIDIUM9670 TPM2.0](https://www.infineon.com/cms/en/product/evaluation-boards/iridium9670-tpm2.0-linux/)\
-  <img src="https://github.com/Infineon/linux-trusted-key-optiga-tpm/raw/main/media/IRIDIUM9670-TPM2.png" width="30%">
+- Use either of the following TPM2.0 boards:
+  - [IRIDIUM9670 TPM2.0](https://www.infineon.com/cms/en/product/evaluation-boards/iridium9670-tpm2.0-linux/)\
+    <img src="https://github.com/Infineon/linux-trusted-key-optiga-tpm/raw/main/media/IRIDIUM9670-TPM2.png" width="30%">
+  - [OPTIGA™ TPM SLB 9672 RPI evaluation board](https://www.infineon.com/cms/en/product/evaluation-boards/optiga-tpm-9672-rpi-eval/)\
+    <img src="https://github.com/Infineon/linux-trusted-key-optiga-tpm/raw/main/media/SLB9672-EVA-BOARD.png" width="40%">
 
 # Getting Started
 
